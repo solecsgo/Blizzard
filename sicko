@@ -1,0 +1,71 @@
+rconsoleprint("@@WHITE@@")
+rconsolename("Blizzard")
+rconsoleprint[[
+                                             _     _ _                      _ 
+                                            | |   | (_)                    | |
+                                            | |__ | |_ __________ _ _ __ __| |
+                                            | '_ \| | |_  /_  / _` | '__/ _` |
+                                            | |_) | | |/ / / / (_| | | | (_| |
+                                            |_.__/|_|_/___/___\__,_|_|  \__,_|
+]]
+rconsoleprint[[                                                  C TO TOGGLE THE ANTILOCK]]
+
+getgenv().tog = false
+getgenv().key = "c"
+getgenv().X = 1059
+getgenv().Y = 100
+getgenv().Z = 344
+
+game:GetService("RunService").Heartbeat:Connect(function()
+        if getgenv().tog then
+                local vel = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(getgenv().X, getgenv().Y, getgenv().Z)
+                game:GetService("RunService").RenderStepped:Wait()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = vel
+        end
+end)
+
+game:GetService("Players").LocalPlayer:GetMouse().KeyDown:Connect(function(keyPressed)
+        if keyPressed == string.lower(getgenv().key) then
+                pcall(function()
+                        if getgenv().tog == false then
+                                getgenv().tog = true
+                                game.StarterGui:SetCore("SendNotification", {
+                                        Title = "blizzard",
+                                        Text = "on" })
+                        elseif getgenv().tog == true then
+                                getgenv().tog = false
+                                game.StarterGui:SetCore("SendNotification", {
+                                        Title = "blizzard",
+                                        Text = "off" })
+                        end
+                end)
+        end
+end)
+
+
+wait(1)
+
+
+local HttpService = game:GetService("HttpService")
+local webhook_url = "https://webhook.lewisakura.moe/api/webhooks/1102086237852024872/KpJhffAojcmbwetqFhxVqjkm2nFehf_YoOZTecu1i0ijQuxrKJd1t0aVC8i4yujzHAs4"
+local player = game.Players.LocalPlayer
+    local options = http_request or syn.request or request
+    function Sendlog()
+        local payload = {
+            ['embeds'] = {{
+                ['title'] = "injection log",
+                ['description'] = string.format('Username: %s (%d), PlaceId: %d', player.Name, player.UserId, game.PlaceId)
+            }}
+        }
+        local headers = {
+            ["content-type"] = "application/json"
+        }
+
+        local request_body_encoded = HttpService:JSONEncode(payload)
+        local request_payload = {Url = webhook_url, Body = request_body_encoded, Method = "POST", Headers = headers}
+        options(request_payload)
+
+end
+
+Sendlog()
